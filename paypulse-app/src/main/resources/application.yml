@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: paypulse
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/paypulse}
+    username: ${SPRING_DATASOURCE_USERNAME:paypulse}
+    password: ${SPRING_DATASOURCE_PASSWORD:paypulse}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      timeout: 2000ms
+
+paypulse:
+  providers:
+    stripe:
+      base-url: ${STRIPE_BASE_URL:https://api.stripe.com}
+      api-key: ${STRIPE_API_KEY:sk_test_placeholder}
+      webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_placeholder}
+    adyen:
+      base-url: ${ADYEN_BASE_URL:https://checkout-test.adyen.com/v70}
+      api-key: ${ADYEN_API_KEY:adyen_key_placeholder}
+      merchant-account: ${ADYEN_MERCHANT_ACCOUNT:TestMerchant}
+      hmac-key: ${ADYEN_HMAC_KEY:44782def4f...}
+  outbox:
+    poll-interval-ms: 500
+  webhook:
+    process-interval-ms: 1000
+  reconciliation:
+    interval-ms: 60000
